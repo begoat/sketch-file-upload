@@ -1,5 +1,4 @@
 var onRun = function(context) {
-    
     // General declarations
     
     var padding = 100
@@ -68,11 +67,12 @@ var onRun = function(context) {
             var exportRequests = MSExportRequest.exportRequestsFromExportableLayer(artboard)
             document.saveExportRequest_toFile(exportRequests[0], pathString() + "/" + artboard.nodeName() + ".png")
             
-            
-
-
-            var imagePath = "/Users/william/Desktop/Part1.png";
-
+            var imagePath = pathString() + "/" + artboard.nodeName() + ".png";       
+            imagePath = '/Users/william/Desktop/Page1.png';
+            log(imagePath);
+            var arg1 = '-F Up=@' + imagePath;
+            var args = ['-X POST', arg1, 'http://120.24.73.105:8000/Up/'];
+            curlTask(args);
             // var request = NSMutableURLRequest.alloc().init();
             // request.setHTTPMethod_("POST");
             // request.setURL_(NSURL.URLWithString_('http://localhost:8080'));
@@ -88,16 +88,18 @@ var onRun = function(context) {
         // http://sketchplugins.com/d/75-ajax-fetch-api/4
         var task = NSTask.alloc().init();
         task.setLaunchPath("/usr/bin/curl");
-        var args =  ["http://localhost:8080"]
         task.setArguments(args);
+log("/usr/bin/curl " + args.join(" "));
         var outputPipe = [NSPipe pipe];
-        [task setStandardOutput:outputPipe];
+var errorPipe = [NSPipe pipe];
+  [task setStandardOutput:outputPipe];
+  [task setStandardError:errorPipe];
         task.launch();
-
-            // var responseData = [[outputPipe fileHandleForReading] readDataToEndOfFile];
-            // var responseString = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]];
-            // var parsed = tryParseJSON(responseString);
-            // log(parsed);
+        task.waitUntilExit();
+// var responseData = [[outputPipe fileHandleForReading] readDataToEndOfFile];
+// var responseString = [[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]];
+// var parsed = tryParseJSON(responseString);
+// log(parsed);
     }
 
     // Helper functions
